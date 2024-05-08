@@ -1,3 +1,5 @@
+// node demo_mongodb_createcollection.js
+
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
@@ -19,3 +21,7 @@ MongoClient.connect(url)
     })
 
 console.log("end");
+
+
+
+
