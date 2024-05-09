@@ -12,26 +12,25 @@ const client = new MongoClient(uri);
 
 async function run() {
   try {
-    // Get the "movies" collection in the "sample_mflix" database
+
+    // Get the database and collection on which to run the operation
     const database = client.db("sample_mflix");
     const movies = database.collection("movies");
 
-    // Create a filter to update all movies with a 'G' rating
-    const filter = { rated: "G" };
+    // Create a query for documents where the title contains "The Cat from"
+    const query = { title: { $regex: "The Cat from" } };
 
-    // Create an update document specifying the change to make
-    const updateDoc = {
-      $set: {
-        random_review: `After viewing I am ${
-          100 * Math.random()
-        }% more satisfied with life.`,
-      },
+    // Create the document that will replace the existing document
+    const replacement = {
+      title: `The Cat from Sector ${Math.floor(Math.random() * 1000) + 1}`,
     };
-    // Update the documents that match the specified filter
-    const result = await movies.updateMany(filter, updateDoc);
-    console.log(`Updated ${result.modifiedCount} documents`);
+
+    // Execute the replace operation
+    const result = await movies.replaceOne(query, replacement);
+
+    // Print the result 
+    console.log(`Modified ${result.modifiedCount} document(s)`);
   } finally {
-    // Close the database connection on completion or error
     await client.close();
   }
 }
