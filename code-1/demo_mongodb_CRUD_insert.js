@@ -10,47 +10,24 @@ const client = new MongoClient(uri);
 
 async function run() {
   try {
+    // Connect to the "insertDB" database and access its "haiku" collection
+    const database = client.db("insertDB");
+    const haiku = database.collection("haiku");
+    
+    // Create a document to insert
+    const doc = {
+      title: "Record of a Shriveled Datum",
+      content: "No bytes, no problem. Just insert a document, in MongoDB",
+    }
+    // Insert the defined document into the "haiku" collection
+    const result = await haiku.insertOne(doc);
 
-    // Get the database and collection on which to run the operation
-    const database = client.db("sample_mflix"); // DATABASE name
-    const movies = database.collection("movies");  // TABLE name
-
-    // 1. find - SELECT * FROM TABLE
-    // Query for a movie that has the title 'The Room'
-    const query = { title: "The Great Train Robbery" };
-
-    // set is blank for now
-    const options = {
-    };
-
-    // Execute query
-    const movie = await movies.findOne(query, options);
-
-    // Print the document returned by findOne()
-    console.log(movie);
-    //
-    console.log(movie.title);
-    //
-    console.log(movie.year);
-    //
-    console.log(movie.rated);
-
-    // 2. find - SELECT COLUMN1, COLUMN2 FROM TABLE
-    const query2 = { title: "The Great Train Robbery" };
-
-    // set OPTIONS - select only a few columns
-    const options2 = {
-      projection: { _id: 0, title: 1, imdb: 1, cast: 1 },
-    };
-
-    // Execute query
-    const movie2 = await movies.findOne(query2, options2);
-    // Print the document returned by findOne()
-    console.log(movie2);
-
-
+    // Print the ID of the inserted document
+    console.log(`A document was inserted with the _id: ${result.insertedId}`);
   } finally {
+     // Close the MongoDB client connection
     await client.close();
   }
 }
+// Run the function and handle any errors
 run().catch(console.dir);
