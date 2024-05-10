@@ -17,20 +17,21 @@ async function run() {
 
     console.log("----------------------------------------------------------------------");
 
-    // 1. find - SELECT * FROM TABLE ORDER BY RELEASED ASC
+    // 1. find - SELECT * FROM TABLE ORDER BY year ASC
     // Query for a movie that has the title 'The Room'
     // $not: [ {key1: value1}, {key2:value2}
     // const query2 = { $not: [{"rated":"R"} , {"year":"2010"}]};
     const query2 = { } ;
+    const limit2 = 10;
 
     // set is blank for now
     const options2 = {
-      sort: { released: 1 },
-      projection: { _id: 0, title: 1, imdb: 1,  year: 1, released: 1 },
+      sort: { year: 1 },
+      projection: { _id: 0, title: 1, imdb: 1,  year: 1 },
     };
 
     // Execute query
-    const cursor2 = movies.find(query2, options2);
+    const cursor2 = movies.find(query2, options2).limit(limit2);
 
     // Print a message if no documents were found
     if ((await movies.countDocuments(query2)) === 0) {
@@ -46,16 +47,17 @@ async function run() {
 
     console.log("----------------------------------------------------------------------");
 
-    // 1. find - SELECT * FROM TABLE ORDER BY AWARDS.WINS ASC
+    // 1. find - SELECT * FROM TABLE ORDER BY awards.wins ASC
     // Query for a movie that has the title 'The Room'
     // $not: [ {key1: value1}, {key2:value2}
     // const query2 = { $not: [{"rated":"R"} , {"year":"2010"}]};
     const query3 = { } ;
-
+    
     // set is blank for now
     const options3 = {
-      sort: { "awards.wins": 1 },
-      projection: { _id: 0, title: 1, imdb: 1,  year: 1, released: 1, awards: 1 },
+      sort: { "awards.wins": -1 },
+      limit: 10,
+      projection: { _id: 0, title: 1, imdb: 1,  year: 1 , awards: 1},
     };
 
     // Execute query
@@ -72,38 +74,8 @@ async function run() {
       //console.log(doc);
       //console.log(doc.title + ", " + doc.year);
     }
-  
-    console.log("----------------------------------------------------------------------");
 
-    // 1. find - SELECT * FROM TABLE ORDER BY YEAR DESC
-    // Query for a movie that has the title 'The Room'
-    // $not: [ {key1: value1}, {key2:value2}
-    // const query2 = { $not: [{"rated":"R"} , {"year":"2010"}]};
-    const query4 = { } ;
-
-    // set is blank for now
-    const options4 = {
-      sort: { "year": -1 },
-      projection: { _id: 0, title: 1, imdb: 1,  year: 1  },
-    };
-
-    // Execute query
-    const cursor4 = movies.find(query4, options4);
-
-    // Print a message if no documents were found
-    if ((await movies.countDocuments(query4)) === 0) {
-      console.log("No documents found!");
-    }
-
-    // Print returned documents
-    for await (const document_data4 of cursor4) {
-      console.log(document_data4);
-      //console.log(doc);
-      //console.log(doc.title + ", " + doc.year);
-    }
-  
-
-
+    
   } finally {
     await client.close();
   }
