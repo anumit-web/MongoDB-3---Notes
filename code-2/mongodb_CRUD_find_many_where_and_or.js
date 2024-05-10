@@ -15,47 +15,16 @@ async function run() {
     const database = client.db("sample_mflix"); // DATABASE name
     const movies = database.collection("movies");  // TABLE name
 
-
     console.log("----------------------------------------------------------------------");
 
-      
-
-    console.log("----------------------------------------------------------------------");
-
-    // 1. find - SELECT * FROM TABLE
+    // 1. find - SELECT * FROM TABLE WHERE rated = 'PASSED' AND year < 2000
     // Query for a movie that has the title 'The Room'
-    const query = {};
-
-    // set is blank for now
-    const options = {
-      projection: { _id: 0, title: 1, imdb: 1 },
-    };
-
-    // Execute query
-    const cursor = movies.find(query, options);
-
-    // Print a message if no documents were found
-    if ((await movies.countDocuments(query)) === 0) {
-      console.log("No documents found!");
-    }
-
-    // Print returned documents
-    for await (const document_data of cursor) {
-      console.log(document_data);
-      //console.log(doc);
-      //console.log(doc.title + ", " + doc.year);
-    }
-
-    
-    console.log("----------------------------------------------------------------------");
-
-    // 1. find - SELECT * FROM TABLE WHERE rated = 'TV-G'
-    // Query for a movie that has the title 'The Room'
-    const query2 = {"rated": "TV-G"};
+    // >db.mycol.find({ $and: [ {<key1>:<value1>}, { <key2>:<value2>} ] })
+    const query2 = { $and: [ {"rated": "TV-G"}, {"year": {$lt:2000}}] };
 
     // set is blank for now
     const options2 = {
-      projection: { _id: 0, title: 1, imdb: 1, rated: 1 },
+      projection: { _id: 0, title: 1, imdb: 1, rated: 1, year: 1 },
     };
 
     // Execute query
@@ -72,16 +41,17 @@ async function run() {
       //console.log(doc);
       //console.log(doc.title + ", " + doc.year);
     }
-    
+
     console.log("----------------------------------------------------------------------");
 
-    // 1. find - SELECT * FROM TABLE WHERE year > 1990
+    // 1. find - SELECT * FROM TABLE WHERE rated = 'R' AND countries = "Canada"
     // Query for a movie that has the title 'The Room'
-    const query3 = {"year": {$gt:1990}};
+    // >db.mycol.find({ $and: [ {<key1>:<value1>}, { <key2>:<value2>} ] })
+    const query3 = { $and: [ {"rated": "R"}, {countries: "Canada"} ]};
 
     // set is blank for now
     const options3 = {
-      projection: { _id: 0, title: 1, imdb: 1, rated: 1, year: 1 },
+      projection: { _id: 0, title: 1, imdb: 1, rated: 1, year: 1, countries: 1 },
     };
 
     // Execute query
@@ -95,32 +65,37 @@ async function run() {
     // Print returned documents
     for await (const document_data3 of cursor3) {
       console.log(document_data3);
+      //console.log(doc);
+      //console.log(doc.title + ", " + doc.year);
     }
-  
+
     console.log("----------------------------------------------------------------------");
 
-    // 1. find - SELECT * FROM TABLE WHERE rated in ("TV-G", "R", "PASSED")
+    // 1. find - SELECT * FROM TABLE WHERE rated = 'R' AND countries = "Canada"
     // Query for a movie that has the title 'The Room'
-    const query4 = {"rated": {$in:["TV-G", "R", "PASSED"] } };
+    // >db.mycol.find({ $and: [ {<key1>:<value1>}, { <key2>:<value2>} ] })
+    const query3 = { $and: [ {"rated": "R"}, {countries: "Canada"} ]};
 
     // set is blank for now
-    const options4 = {
-      projection: { _id: 0, title: 1, imdb: 1, rated: 1, year: 1, tomatoes: 1 },
+    const options3 = {
+      projection: { _id: 0, title: 1, imdb: 1, rated: 1, year: 1, countries: 1 },
     };
 
     // Execute query
-    const cursor4 = movies.find(query4, options4);
+    const cursor3 = movies.find(query3, options3);
 
     // Print a message if no documents were found
-    if ((await movies.countDocuments(query4)) === 0) {
+    if ((await movies.countDocuments(query3)) === 0) {
       console.log("No documents found!");
     }
 
     // Print returned documents
-    for await (const document_data4 of cursor4) {
-      console.log(document_data4);
+    for await (const document_data3 of cursor3) {
+      console.log(document_data3);
+      //console.log(doc);
+      //console.log(doc.title + ", " + doc.year);
     }
-   
+
 
   } finally {
     await client.close();
