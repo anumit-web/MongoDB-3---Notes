@@ -71,29 +71,28 @@ async function run() {
 
     console.log("----------------------------------------------------------------------");
 
-    // 1. find - SELECT * FROM TABLE WHERE rated = 'R' AND countries = "Canada"
+    // 1. find - SELECT * FROM TABLE WHERE rated = 'R' AND ( countries = "Spain" OR year = 1926)
     // Query for a movie that has the title 'The Room'
     // >db.mycol.find({ $and: [ {<key1>:<value1>}, { <key2>:<value2>} ] })
-    const query3 = { $and: [ {"rated": "R"}, {countries: "Canada"} ]};
+    //const query4 = { {"rated":"R"} , $or: [ {"countries": "Canada"}, {"year": "1926"} ]};
+    const query4 = { "rated":"R",  $or: [ {"countries": "Spain"}, {"year": "1926"} ]};
 
     // set is blank for now
-    const options3 = {
-      projection: { _id: 0, title: 1, imdb: 1, rated: 1, year: 1, countries: 1 },
+    const options4 = {
+      projection: { _id: 0, title: 1, imdb: 1, rated: 1, year: 1, countries: 1, languages: 1 },
     };
 
     // Execute query
-    const cursor3 = movies.find(query3, options3);
+    const cursor4 = movies.find(query4, options4);
 
     // Print a message if no documents were found
-    if ((await movies.countDocuments(query3)) === 0) {
+    if ((await movies.countDocuments(query4)) === 0) {
       console.log("No documents found!");
     }
 
     // Print returned documents
-    for await (const document_data3 of cursor3) {
-      console.log(document_data3);
-      //console.log(doc);
-      //console.log(doc.title + ", " + doc.year);
+    for await (const document_data4 of cursor4) {
+      console.log(document_data4);
     }
 
 
