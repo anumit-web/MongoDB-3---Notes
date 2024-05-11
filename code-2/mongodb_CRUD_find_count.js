@@ -48,7 +48,7 @@ async function run() {
     // Query for a movie that has the title 'The Room'
     // $not: [ {key1: value1}, {key2:value2}
     // const query2 = { $not: [{"rated":"R"} , {"year":"2010"}]};
-    const query4 = {"genres":  "Drama"};
+    const query4 = { "genres": "Drama" };
 
     // set is blank for now
     const options4 = {
@@ -66,6 +66,50 @@ async function run() {
     // Print returned documents
     const countNumber4 = await movies.countDocuments(query4, options4);
     console.log("Number of movies " + countNumber4);
+
+    console.log("----------------------------------------------------------------------");
+
+    // 1. find - SELECT year, COUNT(*) FROM TABLE group by year
+
+    const query5 = {};
+
+    // set is blank for now
+    const options5 = {    };
+
+    const cursor5 = await database.collection('movies').aggregate([
+      { $group: { _id: "$year", "Movies per year": { $sum: 1 } } }      
+    ])
+
+    // Print returned documents
+    for await (const document_data5 of cursor5) {
+      console.log(document_data5);
+    }
+
+
+  
+    
+    console.log("----------------------------------------------------------------------");
+
+    // 1. find - SELECT year, COUNT(*) FROM TABLE WHERE countries = "Canada" group by year ORDER BY year asc
+    const query7 = {};
+
+    // set is blank for now
+    const options7 = {    };
+
+    const cursor7 = await database.collection('movies').aggregate([
+      {
+        $match: { countries: "Canada" }
+      },
+      { $group: { _id: "$year", "Movies count in year for Canada": { $sum: 1 } } } ,
+      { 
+        $sort: { _id: 1 } /* sort by year */
+      }
+    ])
+
+    // Print returned documents
+    for await (const document_data7 of cursor7) {
+      console.log(document_data7);
+    }
 
   } finally {
     await client.close();
